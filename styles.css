@@ -669,7 +669,7 @@ img {
     "copy steps-top"
     "card steps-bottom";
   column-gap: 40px;
-  row-gap: 0px;
+  row-gap: 24px;
   align-items: start;
 }
 
