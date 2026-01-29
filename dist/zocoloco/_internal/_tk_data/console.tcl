@@ -158,13 +158,8 @@ proc ::tk::ConsoleInit {} {
 
     ConsoleBind $con
 
-    if {[tk windowingsystem] eq "aqua"} {
-	$con tag configure stdin -foreground systemLinkColor
-    } else {
-	$con tag configure stdin -foreground blue
-    }
-
     $con tag configure stderr	-foreground red
+    $con tag configure stdin	-foreground blue
     $con tag configure prompt	-foreground \#8F4433
     $con tag configure proc	-foreground \#008800
     $con tag configure var	-background \#FFC0D0
@@ -220,7 +215,7 @@ proc ::tk::ConsoleSource {} {
 	    [list [mc "Tcl Scripts"] .tcl] \
 	    [list [mc "All Files"] *]]]
     if {$filename ne ""} {
-	set cmd [list source -encoding utf-8 $filename]
+	set cmd [list source $filename]
 	if {[catch {consoleinterp eval $cmd} result]} {
 	    ConsoleOutput stderr "$result\n"
 	}

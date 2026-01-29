@@ -5,6 +5,7 @@ import asyncio
 import threading
 import os
 import sys
+import webbrowser
 from pathlib import Path
 from datetime import datetime
 
@@ -85,7 +86,7 @@ _fonts_loaded = _load_fonts_early()
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import tkinter.font as tkfont
-from PIL import Image
+from PIL import Image, ImageSequence
 
 # Color scheme - Blue accent
 COLORS = {
@@ -106,6 +107,10 @@ COLORS = {
 
 # Font settings - use Space Grotesk if loaded, otherwise fall back
 FONT_FAMILY = "Space Grotesk"
+
+# External links (fill in when ready)
+ZOCO_URL = None
+DONATE_URL = None
 
 
 class HoverButton(ctk.CTkButton):
@@ -367,7 +372,7 @@ class TelegramScraperApp(ctk.CTk):
         ctk.CTkLabel(title_frame, text="zocoloco", 
                      font=ctk.CTkFont(family=FONT_FAMILY, size=22, weight="bold"),
                      text_color=COLORS["text"]).pack(anchor="w")
-        ctk.CTkLabel(title_frame, text="Telegram scraper", 
+        ctk.CTkLabel(title_frame, text="your BD intern", 
                      font=ctk.CTkFont(family=FONT_FAMILY, size=11),
                      text_color=COLORS["text_muted"]).pack(anchor="w")
         
@@ -377,6 +382,15 @@ class TelegramScraperApp(ctk.CTk):
         
         # === Credentials Card ===
         cred_card = self._create_card(scroll_frame, "API credentials")
+        ctk.CTkLabel(
+            cred_card,
+            text="Find these at https://my.telegram.org/. Make sure the account is in the group you're scraping.",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            text_color=COLORS["text_muted"],
+            justify="left",
+            anchor="w",
+            wraplength=480
+        ).pack(fill="x", pady=(0, 12))
         
         self.api_id_field = ModernEntry(cred_card, "API ID", "Enter your API ID")
         self.api_id_field.pack(fill="x", pady=(0, 12))
@@ -392,19 +406,27 @@ class TelegramScraperApp(ctk.CTk):
         save_row.pack_propagate(False)
         save_btn = HoverButton(save_row, text="Save credentials", 
                                command=self._save_credentials,
-                               fg_color="transparent",
-                               hover_color=COLORS["bg_input"],
-                               border_width=1,
-                               border_color=COLORS["border"],
-                               text_color=COLORS["text_muted"],
+                               fg_color=COLORS["accent"],
+                               hover_color=COLORS["accent_hover"],
+                               border_width=0,
+                               text_color="#ffffff",
                                height=34,
                                font=ctk.CTkFont(family=FONT_FAMILY, size=12))
         save_btn.place(relx=0.5, rely=0.0, anchor="n", relwidth=0.5)
         
         # === Scrape Settings Card ===
         settings_card = self._create_card(scroll_frame, "Scrape settings")
+        ctk.CTkLabel(
+            settings_card,
+            text="For private groups, open the group in the TG browser app and copy the hash ID from the URL including the - symbol preceding it.",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            text_color=COLORS["text_muted"],
+            justify="left",
+            anchor="w",
+            wraplength=480
+        ).pack(fill="x", pady=(0, 12))
         
-        self.group_field = ModernEntry(settings_card, "Group", "@groupname or t.me/+invite")
+        self.group_field = ModernEntry(settings_card, "Group", "@groupname, t.me+invite, -101010101010")
         self.group_field.pack(fill="x", pady=(0, 16))
         
         # Scrape type selector
@@ -477,7 +499,7 @@ class TelegramScraperApp(ctk.CTk):
         start_row.pack(fill="x", pady=(16, 10))
         start_row.pack_propagate(False)
         self.start_btn = HoverButton(start_row, 
-                                      text="Start scraping",
+                                      text="get loco",
                                       command=self._toggle_scrape,
                                       fg_color=COLORS["accent"],
                                       hover_color=COLORS["accent_hover"],
@@ -486,6 +508,42 @@ class TelegramScraperApp(ctk.CTk):
                                       font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
                                       corner_radius=6)
         self.start_btn.place(relx=0.5, rely=0.0, anchor="n", relwidth=0.5)
+
+        # Action links (shown only while scraping)
+        self.links_row = ctk.CTkFrame(scroll_frame, fg_color="transparent", height=36)
+        self.links_row.pack(fill="x", pady=(0, 12))
+        self.links_row.pack_propagate(False)
+
+        links_inner = ctk.CTkFrame(self.links_row, fg_color="transparent")
+        links_inner.place(relx=0.5, rely=0.0, anchor="n")
+
+        self.zoco_link_btn = HoverButton(
+            links_inner,
+            text="get $ZOCO",
+            command=lambda: self._open_link(ZOCO_URL, "get $ZOCO"),
+            fg_color=COLORS["bg_input"],
+            hover_color=COLORS["border"],
+            text_color=COLORS["text"],
+            height=32,
+            width=120,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12)
+        )
+        self.zoco_link_btn.pack(side="left", padx=(0, 10))
+
+        self.donate_link_btn = HoverButton(
+            links_inner,
+            text="donate",
+            command=lambda: self._open_link(DONATE_URL, "donate"),
+            fg_color=COLORS["bg_input"],
+            hover_color=COLORS["border"],
+            text_color=COLORS["text"],
+            height=32,
+            width=100,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12)
+        )
+        self.donate_link_btn.pack(side="left")
+
+        self.links_row.pack_forget()
         
         # === Progress Counter ===
         self.progress_frame = ctk.CTkFrame(scroll_frame, fg_color="transparent", 
@@ -505,6 +563,43 @@ class TelegramScraperApp(ctk.CTk):
                                               font=ctk.CTkFont(family=FONT_FAMILY, size=18, weight="bold"),
                                               text_color=COLORS["accent"])
         self.progress_counter.pack(side="left")
+
+        # Scrape mascot (hidden until scraping starts)
+        self.scrape_mascot_label = None
+        self._scrape_mascot_frames = []
+        self._scrape_mascot_frame_idx = 0
+        self._scrape_mascot_animating = False
+        self._scrape_mascot_delay_ms = 80
+        try:
+            if getattr(sys, 'frozen', False):
+                mascot_path = Path(sys._MEIPASS) / "assets" / "zoco-young.gif"
+            else:
+                mascot_path = Path(__file__).parent / "assets" / "zoco-young.gif"
+            if mascot_path.exists():
+                mascot_img = Image.open(mascot_path)
+                w, h = mascot_img.size
+                scaled_size = (max(1, w // 2), max(1, h // 2))
+                try:
+                    self._scrape_mascot_delay_ms = int(mascot_img.info.get("duration", 80))
+                except Exception:
+                    self._scrape_mascot_delay_ms = 80
+                for frame in ImageSequence.Iterator(mascot_img):
+                    frame_rgba = frame.convert("RGBA")
+                    frame_resized = frame_rgba.resize(scaled_size, Image.Resampling.LANCZOS)
+                    self._scrape_mascot_frames.append(
+                        ctk.CTkImage(
+                            light_image=frame_resized,
+                            dark_image=frame_resized,
+                            size=scaled_size
+                        )
+                    )
+                self.scrape_mascot_label = ctk.CTkLabel(
+                    progress_inner,
+                    image=self._scrape_mascot_frames[0] if self._scrape_mascot_frames else None,
+                    text=""
+                )
+        except Exception:
+            self.scrape_mascot_label = None
         
         # === Activity Log Card ===
         log_card = self._create_card(scroll_frame, "Activity log", expand=True)
@@ -565,6 +660,15 @@ class TelegramScraperApp(ctk.CTk):
         
         self.log_text.insert("end", f"[{timestamp}] {prefix} {message}\n")
         self.log_text.see("end")
+
+    def _open_link(self, url, label):
+        if not url:
+            self._log(f"Link not set yet for {label}", "warning")
+            return
+        try:
+            webbrowser.open(url)
+        except Exception as e:
+            self._log(f"Failed to open {label} link: {e}", "error")
     
     def _load_credentials(self):
         """Load credentials from .env file."""
@@ -631,12 +735,17 @@ class TelegramScraperApp(ctk.CTk):
                                   hover_color="#FF6B6B", text_color="#ffffff")
         self.start_btn.default_color = COLORS["error"]
         self.start_btn.hover_color = "#FF6B6B"
+        self.links_row.pack(fill="x", pady=(0, 12))
         self.status.set_status("Starting...", "running")
         self._update_progress("Initializing", 0)
         
         # Clear previous log
         self.log_text.delete("1.0", "end")
         self._log("Starting scrape job...", "system")
+        if self.scrape_mascot_label is not None:
+            self.scrape_mascot_label.pack(side="left", padx=(12, 0))
+            if self._scrape_mascot_frames:
+                self._start_mascot_animation()
         
         # Run in background thread
         thread = threading.Thread(target=self._run_scrape, daemon=True)
@@ -994,11 +1103,33 @@ class TelegramScraperApp(ctk.CTk):
         self.start_btn.hover_color = COLORS["accent_hover"]
         self.start_btn.configure(
             state="normal", 
-            text="Start scraping",
+            text="get loco",
             fg_color=COLORS["accent"],
             text_color="#ffffff"
         )
         self._update_progress("Ready to scrape", 0)
+        self.links_row.pack_forget()
+        if self.scrape_mascot_label is not None:
+            self.scrape_mascot_label.pack_forget()
+            self._stop_mascot_animation()
+
+    def _start_mascot_animation(self):
+        if self._scrape_mascot_animating or not self._scrape_mascot_frames:
+            return
+        self._scrape_mascot_animating = True
+        self._scrape_mascot_frame_idx = 0
+        self._animate_mascot()
+
+    def _stop_mascot_animation(self):
+        self._scrape_mascot_animating = False
+
+    def _animate_mascot(self):
+        if not self._scrape_mascot_animating or self.scrape_mascot_label is None:
+            return
+        frame = self._scrape_mascot_frames[self._scrape_mascot_frame_idx]
+        self.scrape_mascot_label.configure(image=frame)
+        self._scrape_mascot_frame_idx = (self._scrape_mascot_frame_idx + 1) % len(self._scrape_mascot_frames)
+        self.after(self._scrape_mascot_delay_ms, self._animate_mascot)
 
 
 def main():

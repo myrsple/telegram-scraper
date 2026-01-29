@@ -19,6 +19,7 @@ base_path = Path(os.getcwd())
 # Data files to include
 datas = [
     ('assets/zoco.png', 'assets'),
+    ('assets/zoco-young.gif', 'assets'),
     ('assets/pink.png', 'assets'),
     ('assets/blue.png', 'assets'),
     ('assets/bg.png', 'assets'),
@@ -34,6 +35,8 @@ hidden_imports = [
     'telethon.tl.types',
     'telethon.tl.functions',
     'telethon.errors',
+    'dotenv',
+    'dotenv.main',
     'customtkinter',
     'PIL',
     'PIL.Image',

@@ -5,11 +5,22 @@ import sys
 from pathlib import Path
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError, PhoneCodeInvalidError
-from dotenv import load_dotenv, set_key
+
+try:
+    from dotenv import load_dotenv, set_key
+except Exception:  # Allow GUI app to run without bundled python-dotenv
+    load_dotenv = None
+    set_key = None
 
 
 def load_credentials():
     """Load credentials from .env file, prompt if missing."""
+    if load_dotenv is None:
+        raise RuntimeError(
+            "python-dotenv is not installed. Install it with "
+            "'pip install python-dotenv' or rebuild the app with it bundled."
+        )
+
     load_dotenv()
     
     api_id = os.getenv('TELEGRAM_API_ID')
@@ -41,6 +52,11 @@ def load_credentials():
 
 def _save_to_env(env_path, key, value):
     """Save a key-value pair to .env file."""
+    if set_key is None:
+        raise RuntimeError(
+            "python-dotenv is not installed. Install it with "
+            "'pip install python-dotenv' or rebuild the app with it bundled."
+        )
     if not env_path.exists():
         env_path.touch()
     set_key(str(env_path), key, value)
