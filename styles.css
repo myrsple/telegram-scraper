@@ -73,6 +73,10 @@ body {
   position: relative;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -1035,9 +1039,41 @@ img {
 }
 
 @media (max-width: 640px) {
+  .page {
+    overflow-x: hidden;
+  }
+
+  .page::before,
+  .page::after {
+    width: 360px;
+    height: 360px;
+    opacity: 0.4;
+  }
+
+  .page::before {
+    top: -140px;
+    right: -160px;
+  }
+
+  .page::after {
+    bottom: -200px;
+    left: -180px;
+  }
+
+  .container {
+    width: min(1120px, 90vw);
+  }
+
   .header-inner {
     flex-direction: column;
     align-items: flex-start;
+    padding: 14px 0;
+    gap: 16px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .panel-row {
@@ -1045,7 +1081,47 @@ img {
   }
 
   .hero {
-    padding-top: 50px;
+    padding: 56px 0 32px;
+  }
+
+  .hero-copy h1 {
+    margin: 12px 0 16px;
+  }
+
+  .hero-actions {
+    margin: 22px 0 24px;
+    gap: 12px;
+  }
+
+  .section {
+    padding: 56px 0;
+  }
+
+  .section-header h2,
+  .section h2 {
+    margin: 10px 0 14px;
+  }
+
+  .card-grid {
+    margin-top: 24px;
+    gap: 16px;
+  }
+
+  .step {
+    padding: 16px;
+  }
+
+  .code-card pre {
+    padding: 12px;
+  }
+
+  .cta {
+    padding: 64px 0 72px;
+  }
+
+  .cta-inner {
+    align-items: center;
+    text-align: center;
   }
 
   .button {
@@ -1055,5 +1131,37 @@ img {
   .hero-actions,
   .cta-actions {
     width: 100%;
+    gap: 12px;
+  }
+
+  .workflow-grid {
+    row-gap: 20px;
+  }
+
+  .workflow-card {
+    align-self: stretch;
+  }
+
+  .steps {
+    gap: 12px;
+  }
+
+  .step {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .step-number {
+    margin-bottom: 2px;
+  }
+
+  .code-card {
+    padding: 14px;
+  }
+
+  .code-card pre {
+    font-size: 11px;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 }
