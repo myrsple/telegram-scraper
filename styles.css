@@ -76,14 +76,28 @@ body {
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 25%;
+  left: 0%;
+  width: 200%;
+  height: 200%;
   background-image: url("assets/bg.png");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.2;
+  background-position: left center;
+  opacity: 0.3;
   z-index: -2;
   pointer-events: none;
+  transform: translate3d(0, -10%, 0);
+  animation: bgDrift 33s linear infinite;
+}
+
+@keyframes bgDrift {
+  0% {
+    transform: translate3d(0, -10%, 0);
+  }
+  100% {
+    transform: translate3d(-50%, -10%, 0);
+  }
 }
 
 a {
@@ -623,6 +637,13 @@ img {
   border-radius: var(--radius-md);
   padding: 22px;
   box-shadow: 0 22px 40px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(68, 102, 255, 0.6);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
 }
 
 .card-header {
@@ -643,7 +664,8 @@ img {
   grid-template-areas:
     "copy steps-top"
     "card steps-bottom";
-  gap: 40px;
+  column-gap: 40px;
+  row-gap: 0px;
   align-items: start;
 }
 
@@ -653,6 +675,7 @@ img {
 
 .workflow-card {
   grid-area: card;
+  align-self: end;
 }
 
 .steps-top {
@@ -676,6 +699,13 @@ img {
   border-radius: var(--radius-md);
   border: 1px solid rgba(34, 34, 34, 0.8);
   background: rgba(10, 10, 10, 0.7);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.step:hover {
+  transform: translateY(-4px);
+  border-color: rgba(68, 102, 255, 0.6);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
 }
 
 .step-number {
@@ -704,6 +734,12 @@ img {
 
 .tokenomics-copy {
   display: grid;
+  gap: 18px;
+}
+
+.token-buy {
+  width: 30%;
+  min-width: 160px;
 }
 
 .tokenomics-qr {
@@ -716,6 +752,13 @@ img {
   border-radius: 18px;
   border: 1px solid rgba(34, 34, 34, 0.8);
   box-shadow: 0 22px 50px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tokenomics-qr img:hover {
+  transform: translateY(-4px);
+  border-color: rgba(68, 102, 255, 0.6);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
 }
 
 .code-card {
@@ -723,6 +766,13 @@ img {
   border: 1px solid rgba(34, 34, 34, 0.8);
   border-radius: var(--radius-md);
   padding: 18px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.code-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(68, 102, 255, 0.6);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.5);
 }
 
 .code-card pre {
@@ -783,6 +833,13 @@ img {
   border: 1px solid rgba(34, 34, 34, 0.85);
   background: rgba(12, 12, 12, 0.7);
   padding: 4px 18px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.faq-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(68, 102, 255, 0.6);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
 }
 
 .faq-item summary {
@@ -822,19 +879,18 @@ img {
 
 .cta-inner {
   display: flex;
-  justify-content: space-between;
-  gap: 32px;
+  flex-direction: column;
   align-items: center;
-  background: rgba(10, 10, 10, 0.85);
-  border: 1px solid rgba(34, 34, 34, 0.9);
-  border-radius: var(--radius-lg);
-  padding: 32px;
+  gap: 14px;
+  padding: 12px 0;
+  text-align: center;
 }
 
 .cta-actions {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .site-footer {
