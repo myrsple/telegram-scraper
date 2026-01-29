@@ -13,9 +13,35 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<dict>
+			<key>hash</key>
+			<data>
+			Db4ESpkiVy4HSGafqEqkZkwz5h8=
+			</data>
 			<key>hash2</key>
 			<data>
 			kg3nsA/2xseyJfhwAivB5KnxV3ia9w4hj+xf7OQ0hzQ=
+			</data>
+		</dict>
+		<key>include/python3.12/pyconfig.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			1K9SqFQ9THB/DMC/qxDlk62ug9k=
+			</data>
+			<key>hash2</key>
+			<data>
+			ugAKFkgFdKURxuR8Uu1CPY7tfONg0/mBU8EqVqA3jzs=
+			</data>
+		</dict>
+		<key>lib/python3.12/config-3.12-darwin/Makefile</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			aMjOBcMaiAvtEiwzRo/V+27VkE8=
+			</data>
+			<key>hash2</key>
+			<data>
+			o4O1RXjNT6Wh6x3CEo7hoQ6uQQzbvgZzvVQ+EQ1FJSw=
 			</data>
 		</dict>
 	</dict>

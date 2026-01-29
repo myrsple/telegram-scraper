@@ -23,17 +23,24 @@ DATA_FILES = [
         'fonts/SpaceGrotesk-Regular.ttf',
         'fonts/SpaceGrotesk-SemiBold.ttf',
     ]),
-    # Image assets (logo and gradients)
-    ('', [
-        'zoco.png',
-        'pink.png',
-        'blue.png',
+    # Image assets
+    ('assets', [
+        'assets/zoco.png',
+        'assets/pink.png',
+        'assets/blue.png',
+        'assets/bg.png',
+        'assets/qr.png',
+        'assets/zoco-young.gif',
+        'assets/zoco-gh.png',
+        'assets/x-logo.png',
+        'assets/github-icon.svg',
+        'assets/Globe.png',
     ]),
 ]
 
 OPTIONS = {
     'argv_emulation': False,
-    'iconfile': None,  # Add path to .icns file if you have one
+    'iconfile': 'assets/icon.icns',
     'plist': {
         'CFBundleName': 'zocoloco',
         'CFBundleDisplayName': 'zocoloco',
@@ -44,7 +51,8 @@ OPTIONS = {
     },
     'packages': ['telethon', 'customtkinter', 'scraper', 'pyglet'],
     'includes': ['tkinter', 'asyncio', 'PIL', 'ctypes'],
-    'resources': ['fonts', 'zoco.png', 'pink.png', 'blue.png'],
+    'excludes': ['PyInstaller', 'PyQt6'],
+    'resources': ['fonts', 'assets'],
 }
 
 setup(
