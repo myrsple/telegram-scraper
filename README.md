@@ -83,4 +83,4 @@ The desktop app lets you choose an output folder (defaults to your Desktop).
 - Member lists can be admin-only in some groups.
 - Phone numbers are often hidden by privacy settings.
 - Large groups and frequent requests can trigger rate limits.
-- Use responsibly and respect Telegram’s terms.
+- Don't get too loco or Telegram will ban you.
