@@ -178,6 +178,8 @@ class ModernEntry(ctk.CTkFrame):
         
         self.entry = ctk.CTkEntry(self, placeholder_text=placeholder, 
                                    fg_color=COLORS["bg_input"], 
+                                   text_color=COLORS["text"],
+                                   placeholder_text_color=COLORS["text_muted"],
                                    border_color=COLORS["border"],
                                    border_width=1,
                                    height=38,
@@ -552,6 +554,8 @@ class TelegramScraperApp(ctk.CTk):
         
         self.output_entry = ctk.CTkEntry(output_row,
                                           fg_color=COLORS["bg_input"],
+                                          text_color=COLORS["text"],
+                                          placeholder_text_color=COLORS["text_muted"],
                                           border_color=COLORS["border"],
                                           border_width=1,
                                           height=38,
