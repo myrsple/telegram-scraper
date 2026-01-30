@@ -27,6 +27,18 @@ def _get_fonts_dir():
     """Get the fonts directory, handling both dev and bundled app contexts."""
     return _resource_root() / "fonts"
 
+def _app_data_dir():
+    """Return a writable per-user data directory and ensure it exists."""
+    if sys.platform == "darwin":
+        base_dir = Path.home() / "Library" / "Application Support"
+    elif os.name == "nt":
+        base_dir = Path(os.getenv("APPDATA", Path.home() / "AppData" / "Roaming"))
+    else:
+        base_dir = Path(os.getenv("XDG_DATA_HOME", Path.home() / ".local" / "share"))
+    app_dir = base_dir / "zocoloco"
+    app_dir.mkdir(parents=True, exist_ok=True)
+    return app_dir
+
 def _register_fonts_coretext(fonts_dir):
     """Register fonts on macOS using CoreText."""
     try:
@@ -750,7 +762,10 @@ class TelegramScraperApp(ctk.CTk):
     
     def _load_credentials(self):
         """Load credentials from .env file."""
-        env_path = Path(__file__).parent / ".env"
+        env_path = _app_data_dir() / ".env"
+        fallback_env = Path(__file__).parent / ".env"
+        if not env_path.exists() and fallback_env.exists():
+            env_path = fallback_env
         if env_path.exists():
             try:
                 with open(env_path) as f:
@@ -769,7 +784,7 @@ class TelegramScraperApp(ctk.CTk):
     
     def _save_credentials(self):
         """Save credentials to .env file."""
-        env_path = Path(__file__).parent / ".env"
+        env_path = _app_data_dir() / ".env"
         try:
             with open(env_path, "w") as f:
                 f.write(f"TELEGRAM_API_ID={self.api_id_field.get()}\n")
@@ -880,7 +895,7 @@ class TelegramScraperApp(ctk.CTk):
         self.after(0, lambda: self.status.set_status("Connecting...", "running"))
         
         # Create client
-        session_path = Path(__file__).parent / "session"
+        session_path = _app_data_dir() / "session"
         client = TelegramClient(str(session_path), api_id, api_hash)
         
         try:

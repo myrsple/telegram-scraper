@@ -18,11 +18,7 @@ base_path = Path(os.getcwd())
 
 # Data files to include
 datas = [
-    ('assets/zoco.png', 'assets'),
-    ('assets/zoco-young.gif', 'assets'),
-    ('assets/pink.png', 'assets'),
-    ('assets/blue.png', 'assets'),
-    ('assets/bg.png', 'assets'),
+    ('assets', 'assets'),
     ('fonts', 'fonts'),
     ('scraper', 'scraper'),
 ]
@@ -105,8 +101,8 @@ app = BUNDLE(
     info_plist={
         'CFBundleName': 'zocoloco',
         'CFBundleDisplayName': 'zocoloco',
-        'CFBundleVersion': '1.0.1',
-        'CFBundleShortVersionString': '1.0.1',
+        'CFBundleVersion': '1.0.2',
+        'CFBundleShortVersionString': '1.0.2',
         'NSHighResolutionCapable': True,
         'NSRequiresAquaSystemAppearance': False,
     },
