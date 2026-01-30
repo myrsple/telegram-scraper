@@ -537,7 +537,7 @@ class TelegramScraperApp(ctk.CTk):
                                                    unselected_color=COLORS["bg_input"],
                                                    unselected_hover_color=COLORS["border"],
                                                    height=36)
-        self.scrape_type.set("Messages")
+        self.scrape_type.set("Combined")
         self.scrape_type.pack(fill="x", pady=(0, 14))
         
         # Two columns for limit and date
