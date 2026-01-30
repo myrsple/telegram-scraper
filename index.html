@@ -257,7 +257,39 @@
                 buyback rounds will be announced on
                 <a href="https://x.com/zoco_loco" class="inline-link" target="_blank" rel="noreferrer">our X</a>
               </p>
-              <a class="button primary token-buy" href="#" title="Buy $ZOCO">buy $ZOCO</a>
+              <a
+                class="button primary token-buy"
+                href="https://pump.fun/coin/5YQ81zxxSrabFj2DY7YUtnF2iFKKA7XHRFevncsGpump"
+                target="_blank"
+                rel="noreferrer"
+                title="Buy $ZOCO"
+              >
+                buy $ZOCO
+              </a>
+              <div class="token-contract">
+                <div class="contract-details">
+                  <span class="contract-label">contract</span>
+                  <span class="contract-address" data-contract-address>
+                    5YQ81zxxSrabFj2DY7YUtnF2iFKKA7XHRFevncsGpump
+                  </span>
+                </div>
+                <button
+                  class="button secondary copy-button"
+                  type="button"
+                  data-copy-contract
+                  aria-label="Copy contract address"
+                  title="Copy contract address"
+                >
+                  <svg class="icon-default" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M16 1H6a2 2 0 0 0-2 2v12h2V3h10V1zm3 4H10a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H10V7h9v14z"
+                    />
+                  </svg>
+                  <svg class="icon-copied" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M9 16.2 4.8 12l-1.4 1.4L9 19l11.6-11.6-1.4-1.4z" />
+                  </svg>
+                </button>
+              </div>
             </div>
             <div class="tokenomics-qr">
               <img src="assets/qr.png" alt="$ZOCO donation QR code" />
@@ -416,6 +448,8 @@
       (() => {
         const openButtons = document.querySelectorAll("[data-open-modal]");
         const closeButtons = document.querySelectorAll("[data-close-modal]");
+        const copyButton = document.querySelector("[data-copy-contract]");
+        const contractEl = document.querySelector("[data-contract-address]");
 
         const openModal = (id) => {
           const modal = document.getElementById(id);
@@ -445,6 +479,43 @@
           const modal = document.querySelector(".modal.is-open");
           if (modal) closeModal(modal);
         });
+
+        if (copyButton && contractEl) {
+          const originalLabel = copyButton.getAttribute("aria-label") || "Copy contract address";
+          const copiedLabel = "Copied to clipboard";
+
+          const copyText = async () => {
+            const address = contractEl.textContent.trim();
+            if (!address) return;
+            try {
+              if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(address);
+              } else {
+                const tempInput = document.createElement("textarea");
+                tempInput.value = address;
+                tempInput.setAttribute("readonly", "");
+                tempInput.style.position = "absolute";
+                tempInput.style.left = "-9999px";
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+              }
+              copyButton.classList.add("is-copied");
+              copyButton.setAttribute("aria-label", copiedLabel);
+              copyButton.setAttribute("title", copiedLabel);
+              setTimeout(() => {
+                copyButton.classList.remove("is-copied");
+                copyButton.setAttribute("aria-label", originalLabel);
+                copyButton.setAttribute("title", originalLabel);
+              }, 1600);
+            } catch (error) {
+              console.error("Failed to copy contract address", error);
+            }
+          };
+
+          copyButton.addEventListener("click", copyText);
+        }
       })();
     </script>
   </body>

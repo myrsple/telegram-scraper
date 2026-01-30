@@ -746,6 +746,68 @@ img {
   min-width: 160px;
 }
 
+.token-contract {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.contract-details {
+  display: grid;
+  gap: 4px;
+}
+
+.contract-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.contract-address {
+  font-size: 13px;
+  color: var(--accent-secondary);
+  word-break: break-all;
+}
+
+.copy-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  gap: 0;
+  font-size: 0;
+}
+
+.copy-button svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.copy-button .icon-copied {
+  display: none;
+}
+
+.copy-button.is-copied .icon-default {
+  display: none;
+}
+
+.copy-button.is-copied .icon-copied {
+  display: block;
+}
+
+.copy-button.is-copied {
+  border-color: rgba(34, 197, 94, 0.8);
+  color: #ffffff;
+  background: rgba(34, 197, 94, 0.18);
+}
+
 .tokenomics-qr {
   display: flex;
   justify-content: center;
@@ -1126,6 +1188,11 @@ img {
 
   .button {
     width: 100%;
+  }
+
+  .token-contract {
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .hero-actions,
